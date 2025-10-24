@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="En">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -138,6 +138,23 @@
     .document-section.disabled {
       opacity: 0.6;
       pointer-events: none;
+      position: relative;
+    }
+
+    .document-section.disabled::after {
+      content: "Complete previous step first";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      color: #4b5563;
+      border-radius: 8px;
     }
 
     .step-number {
@@ -190,45 +207,50 @@
   <div class="container">
     <h1>Formulaire d'inscription</h1>
 
-    <div id="doc1Section" class="document-section">
-      <div class="section-header">
-        <span class="step-number">1</span>
-        <h3>First document - Please read carefully</h3>
-      </div>
-      <iframe id="docFrame1" src="https://drive.google.com/file/d/14204RWAFdW0JIDB_gW1n50VrJbXaXcNB/preview" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+    <form id="form">
+      <h2><span class="step-number">1</span>Personal Information</h2>
       
-      <div class="document-progress">
-        <div id="progressBar1" class="progress-bar"></div>
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" name="firstName" required />
+
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" name="lastName" required />
+
+      <label for="dateOfBirth">Date of Birth</label>
+      <input type="date" id="dateOfBirth" name="dateOfBirth" required />
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="phone">Telephone Number</label>
+      <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" placeholder="ex: 0612345678" required />
+
+      <label for="emergencyContact">Emergency Contact (Full Name and Phone)</label>
+      <input type="text" id="emergencyContact" name="emergencyContact" placeholder="ex: John Doe - 0612345678" required />
+
+      <div id="doc1Section" class="document-section">
+        <h2><span class="step-number">2</span>First Document Review</h2>
+        <iframe id="docFrame1" src="https://drive.google.com/file/d/14204RWAFdW0JIDB_gW1n50VrJbXaXcNB/preview" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+        
+        <div id="acceptance1" class="acceptance-box">
+          <span>I confirm that I have read and understood this document</span>
+          <button id="accept1" type="button">Accept and Continue</button>
+        </div>
       </div>
 
-      <div id="acceptance1" class="acceptance-box">
-        <span>I confirm that I have read and understood this document</span>
-        <button id="accept1" type="button" disabled>Accept</button>
-      </div>
-    </div>
-
-    <div id="doc2Section" class="document-section disabled">
-      <div class="section-header">
-        <span class="step-number">2</span>
-        <h3>Second document - Please read carefully</h3>
-      </div>
-      <iframe id="docFrame2" src="https://drive.google.com/file/d/1u2Wawp1ydYlD8A_HrxkIx9E_R_euVkC0/preview" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
-      
-      <div class="document-progress">
-        <div id="progressBar2" class="progress-bar"></div>
+      <div id="doc2Section" class="document-section disabled">
+        <h2><span class="step-number">3</span>Second Document Review</h2>
+        <iframe id="docFrame2" src="https://drive.google.com/file/d/1u2Wawp1ydYlD8A_HrxkIx9E_R_euVkC0/preview" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+        
+        <div id="acceptance2" class="acceptance-box">
+          <span>I confirm that I have read and understood this document</span>
+          <button id="accept2" type="button">Accept and Continue</button>
+        </div>
       </div>
 
-      <div id="acceptance2" class="acceptance-box">
-        <span>I confirm that I have read and understood this document</span>
-        <button id="accept2" type="button" disabled>Accept</button>
-      </div>
-    </div>
-
-    <div id="formNotice" class="form-notice">
-      Please read and accept both documents to enable the form
-    </div>
-
-    <form id="form" class="form-disabled">
+      <button type="submit" id="submitBtn" disabled>Submit Form</button>
+      <p id="status"></p>
+    </form>
       <label for="firstName">First Name</label>
       <input type="text" id="firstName" name="firstName" required />
 
@@ -262,34 +284,33 @@
     const status = document.getElementById('status');
     const doc1Section = document.getElementById('doc1Section');
     const doc2Section = document.getElementById('doc2Section');
-    const progressBar1 = document.getElementById('progressBar1');
-    const progressBar2 = document.getElementById('progressBar2');
     const accept1Button = document.getElementById('accept1');
     const accept2Button = document.getElementById('accept2');
-    const formNotice = document.getElementById('formNotice');
+    const submitBtn = document.getElementById('submitBtn');
     
-    let doc1Read = false;
-    let doc2Read = false;
     let doc1Accepted = false;
     let doc2Accepted = false;
 
-    function updateFormState() {
-      if (doc1Accepted && doc2Accepted) {
-        form.classList.remove('form-disabled');
-        formNotice.style.display = 'none';
-      }
+    // Fonction pour vérifier si le formulaire est complet
+    function checkFormCompletion() {
+      const allInputsFilled = Array.from(form.querySelectorAll('input[required]'))
+        .every(input => input.value.trim() !== '');
+      
+      submitBtn.disabled = !(allInputsFilled && doc1Accepted && doc2Accepted);
     }
 
-    function enableDoc2Section() {
-      doc2Section.classList.remove('disabled');
-      doc1Section.classList.add('completed');
-    }
+    // Écouter les changements dans les champs du formulaire
+    form.querySelectorAll('input[required]').forEach(input => {
+      input.addEventListener('input', checkFormCompletion);
+    });
 
     accept1Button.addEventListener('click', () => {
       doc1Accepted = true;
-      enableDoc2Section();
       accept1Button.disabled = true;
       accept1Button.textContent = '✓ Accepted';
+      doc2Section.classList.remove('disabled');
+      doc1Section.classList.add('completed');
+      checkFormCompletion();
     });
 
     accept2Button.addEventListener('click', () => {
@@ -297,44 +318,24 @@
       accept2Button.disabled = true;
       accept2Button.textContent = '✓ Accepted';
       doc2Section.classList.add('completed');
-      updateFormState();
-    });
-
-    // Écouter le scroll dans les iframes
-    window.addEventListener('message', (event) => {
-      if (event.origin === 'https://drive.google.com') {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === 'scroll') {
-            const scrollPercentage = (data.scrollTop + data.viewportHeight) / data.documentHeight * 100;
-            
-            // Identifier quel document est en cours de lecture
-            const iframe = document.querySelector('iframe[src="' + event.source.location.href + '"]');
-            if (iframe.id === 'docFrame1') {
-              progressBar1.style.width = Math.min(scrollPercentage, 100) + '%';
-              if (scrollPercentage >= 95 && !doc1Read) {
-                doc1Read = true;
-                accept1Button.disabled = false;
-              }
-            } else if (iframe.id === 'docFrame2') {
-              progressBar2.style.width = Math.min(scrollPercentage, 100) + '%';
-              if (scrollPercentage >= 95 && !doc2Read) {
-                doc2Read = true;
-                accept2Button.disabled = false;
-              }
-            }
-          }
-        } catch (e) {
-          console.log('Invalid message from iframe');
-        }
-      }
+      checkFormCompletion();
     });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       
+      // Double vérification de la complétion
       if (!doc1Accepted || !doc2Accepted) {
-        status.textContent = '⚠️ Please read and accept both documents before submitting';
+        status.textContent = '⚠️ Please accept both documents before submitting';
+        status.className = 'error';
+        return;
+      }
+
+      const allInputsFilled = Array.from(form.querySelectorAll('input[required]'))
+        .every(input => input.value.trim() !== '');
+      
+      if (!allInputsFilled) {
+        status.textContent = '⚠️ Please fill in all required fields';
         status.className = 'error';
         return;
       }
