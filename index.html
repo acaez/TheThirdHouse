@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulaire d'information</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background-color: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    button:hover {
+      background-color: #1e40af;
+    }
+
+    .success {
+      color: green;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Formulaire d'information</h1>
+
+    <h3>Documents à lire avant de continuer :</h3>
+    <iframe src="https://drive.google.com/file/d/TON_ID_DE_DOCUMENT/preview" allow="autoplay"></iframe>
+
+    <form id="form">
+      <label for="nom">Nom complet</label>
+      <input type="text" id="nom" name="nom" required />
+
+      <label for="email">Adresse email</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="message">Commentaires (optionnel)</label>
+      <textarea id="message" name="message" rows="3"></textarea>
+
+      <label>
+        <input type="checkbox" id="agree" required />
+        J’ai lu et compris les documents ci-dessus
+      </label>
+
+      <button type="submit">Envoyer</button>
+      <p id="status"></p>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('form');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = '';
+      status.className = '';
+
+      const data = {
+        fields: {
+          Nom: form.nom.value,
+          Email: form.email.value,
+          Commentaires: form.message.value || ""
+        }
+      };
+
+      try {
+        const res = await fetch('https://api.airtable.com/v0/YOUR_BASE_ID/YOUR_TABLE_NAME', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer YOUR_AIRTABLE_API_KEY',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          status.textContent = '✅ Formulaire envoyé avec succès !';
+          status.className = 'success';
+          form.reset();
+        } else {
+          throw new Error('Erreur API');
+        }
+      } catch (err) {
+        status.textContent = '❌ Une erreur est survenue. Vérifie ta configuration.';
+        status.className = 'error';
+      }
+    });
+  </script>
+</body>
+</html>
+
