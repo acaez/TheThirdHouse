@@ -43,13 +43,23 @@
       font-weight: 500;
     }
 
-    input, textarea {
+    input:not([type="checkbox"]), textarea {
       width: 100%;
       padding: 0.6rem;
       border: 1px solid #ccc;
       border-radius: 8px;
       margin-top: 0.5rem;
+      margin-bottom: 1rem;
       font-size: 1rem;
+    }
+    
+    input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+
+    input::placeholder {
+      color: #9ca3af;
+      font-size: 0.9rem;
     }
 
     button {
@@ -80,31 +90,169 @@
       text-align: center;
       margin-top: 1rem;
     }
+
+    .document-progress {
+      width: 100%;
+      height: 4px;
+      background: #e5e7eb;
+      border-radius: 2px;
+      margin: 1rem 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #2563eb;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .form-disabled {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .form-notice {
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      color: #c2410c;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    button:disabled {
+      background-color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .document-section {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .document-section.disabled {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background-color: #2563eb;
+      color: white;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .acceptance-box {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .acceptance-box button {
+      margin: 0;
+      width: auto;
+      padding: 0.5rem 1rem;
+    }
+
+    .completed {
+      background-color: #f0fdf4;
+      border-color: #86efac;
+    }
+
+    .completed .step-number {
+      background-color: #16a34a;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Formulaire d'information</h1>
+    <h1>Formulaire d'inscription</h1>
 
-    <h3>Documents à lire avant de continuer :</h3>
-  <iframe src="https://drive.google.com/file/d/1u2Wawp1ydYlD8A_HrxkIx9E_R_euVkC0/preview" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+    <div id="doc1Section" class="document-section">
+      <div class="section-header">
+        <span class="step-number">1</span>
+        <h3>First document - Please read carefully</h3>
+      </div>
+      <iframe id="docFrame1" src="https://drive.google.com/file/d/14204RWAFdW0JIDB_gW1n50VrJbXaXcNB/preview" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+      
+      <div class="document-progress">
+        <div id="progressBar1" class="progress-bar"></div>
+      </div>
 
-    <form id="form">
-      <label for="nom">Nom complet</label>
-      <input type="text" id="nom" name="nom" required />
+      <div id="acceptance1" class="acceptance-box">
+        <span>I confirm that I have read and understood this document</span>
+        <button id="accept1" type="button" disabled>Accept</button>
+      </div>
+    </div>
 
-      <label for="email">Adresse email</label>
+    <div id="doc2Section" class="document-section disabled">
+      <div class="section-header">
+        <span class="step-number">2</span>
+        <h3>Second document - Please read carefully</h3>
+      </div>
+      <iframe id="docFrame2" src="https://drive.google.com/file/d/1u2Wawp1ydYlD8A_HrxkIx9E_R_euVkC0/preview" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+      
+      <div class="document-progress">
+        <div id="progressBar2" class="progress-bar"></div>
+      </div>
+
+      <div id="acceptance2" class="acceptance-box">
+        <span>I confirm that I have read and understood this document</span>
+        <button id="accept2" type="button" disabled>Accept</button>
+      </div>
+    </div>
+
+    <div id="formNotice" class="form-notice">
+      Please read and accept both documents to enable the form
+    </div>
+
+    <form id="form" class="form-disabled">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" name="firstName" required />
+
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" name="lastName" required />
+
+      <label for="dateOfBirth">Date of Birth</label>
+      <input type="date" id="dateOfBirth" name="dateOfBirth" required />
+
+      <label for="email">Email Address</label>
       <input type="email" id="email" name="email" required />
 
-      <label for="message">Commentaires (optionnel)</label>
-      <textarea id="message" name="message" rows="3"></textarea>
+      <label for="phone">Telephone Number</label>
+      <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" placeholder="ex: 0612345678" required />
+
+      <label for="emergencyContact">Emergency Contact (Full Name and Phone)</label>
+      <input type="text" id="emergencyContact" name="emergencyContact" placeholder="ex: John Doe - 0612345678" required />
 
       <label>
         <input type="checkbox" id="agree" required />
-        J’ai lu et compris les documents ci-dessus
+        I have read and understood the documents above
       </label>
 
-      <button type="submit">Envoyer</button>
+      <button type="submit">Submit</button>
       <p id="status"></p>
     </form>
   </div>
@@ -112,25 +260,104 @@
   <script>
     const form = document.getElementById('form');
     const status = document.getElementById('status');
+    const doc1Section = document.getElementById('doc1Section');
+    const doc2Section = document.getElementById('doc2Section');
+    const progressBar1 = document.getElementById('progressBar1');
+    const progressBar2 = document.getElementById('progressBar2');
+    const accept1Button = document.getElementById('accept1');
+    const accept2Button = document.getElementById('accept2');
+    const formNotice = document.getElementById('formNotice');
+    
+    let doc1Read = false;
+    let doc2Read = false;
+    let doc1Accepted = false;
+    let doc2Accepted = false;
+
+    function updateFormState() {
+      if (doc1Accepted && doc2Accepted) {
+        form.classList.remove('form-disabled');
+        formNotice.style.display = 'none';
+      }
+    }
+
+    function enableDoc2Section() {
+      doc2Section.classList.remove('disabled');
+      doc1Section.classList.add('completed');
+    }
+
+    accept1Button.addEventListener('click', () => {
+      doc1Accepted = true;
+      enableDoc2Section();
+      accept1Button.disabled = true;
+      accept1Button.textContent = '✓ Accepted';
+    });
+
+    accept2Button.addEventListener('click', () => {
+      doc2Accepted = true;
+      accept2Button.disabled = true;
+      accept2Button.textContent = '✓ Accepted';
+      doc2Section.classList.add('completed');
+      updateFormState();
+    });
+
+    // Écouter le scroll dans les iframes
+    window.addEventListener('message', (event) => {
+      if (event.origin === 'https://drive.google.com') {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'scroll') {
+            const scrollPercentage = (data.scrollTop + data.viewportHeight) / data.documentHeight * 100;
+            
+            // Identifier quel document est en cours de lecture
+            const iframe = document.querySelector('iframe[src="' + event.source.location.href + '"]');
+            if (iframe.id === 'docFrame1') {
+              progressBar1.style.width = Math.min(scrollPercentage, 100) + '%';
+              if (scrollPercentage >= 95 && !doc1Read) {
+                doc1Read = true;
+                accept1Button.disabled = false;
+              }
+            } else if (iframe.id === 'docFrame2') {
+              progressBar2.style.width = Math.min(scrollPercentage, 100) + '%';
+              if (scrollPercentage >= 95 && !doc2Read) {
+                doc2Read = true;
+                accept2Button.disabled = false;
+              }
+            }
+          }
+        } catch (e) {
+          console.log('Invalid message from iframe');
+        }
+      }
+    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      if (!doc1Accepted || !doc2Accepted) {
+        status.textContent = '⚠️ Please read and accept both documents before submitting';
+        status.className = 'error';
+        return;
+      }
+
       status.textContent = '';
       status.className = '';
 
       const data = {
         fields: {
-          Nom: form.nom.value,
+          FirstName: form.firstName.value,
+          LastName: form.lastName.value,
+          DateOfBirth: form.dateOfBirth.value,
           Email: form.email.value,
-          Commentaires: form.message.value || ""
+          Phone: form.phone.value,
+          EmergencyContact: form.emergencyContact.value
         }
       };
 
       try {
-        const res = await fetch('https://api.airtable.com/v0/YOUR_BASE_ID/YOUR_TABLE_NAME', {
+        const res = await fetch('https://airtable.com/appvYZNgae4dAHxux/tblmq82MTwoubvWmG/viw4j73L9koA9AT5H', {
           method: 'POST',
           headers: {
-            'Authorization': 'Bearer YOUR_AIRTABLE_API_KEY',
+            'Authorization': 'Bearer vYZNgae4dAHxux',
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(data)
