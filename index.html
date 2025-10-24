@@ -128,6 +128,60 @@
       cursor: not-allowed;
     }
 
+    .medical-question {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 2rem;
+      margin: 0.5rem 0;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .conditional-textarea {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .conditional-textarea.visible {
+      display: block;
+    }
+
+    .medical-confirmations {
+      margin: 2rem 0;
+      padding: 1rem;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      margin-top: 0.2rem;
+    }
+
     .document-section {
       border: 1px solid #e5e7eb;
       border-radius: 8px;
@@ -155,19 +209,6 @@
       font-weight: 500;
       color: #4b5563;
       border-radius: 8px;
-    }
-
-    .step-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      background-color: #2563eb;
-      color: white;
-      border-radius: 50%;
-      margin-right: 0.5rem;
-      font-size: 0.875rem;
     }
 
     .section-header {
@@ -208,7 +249,7 @@
     <h1>Formulaire d'inscription</h1>
 
     <form id="form">
-      <h2><span class="step-number">1</span>Personal Information</h2>
+      <h2>Personal Information</h2>
       
       <label for="firstName">First Name</label>
       <input type="text" id="firstName" name="firstName" required />
@@ -228,8 +269,74 @@
       <label for="emergencyContact">Emergency Contact (Full Name and Phone)</label>
       <input type="text" id="emergencyContact" name="emergencyContact" placeholder="ex: John Doe - 0612345678" required />
 
-      <div id="doc1Section" class="document-section">
-        <h2><span class="step-number">2</span>First Document Review</h2>
+      <h2>Medical Information</h2>
+
+      <div class="medical-question">
+        <p>Do you have food or beverage allergies or intolerances?</p>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="foodAllergies" value="no" required> No
+          </label>
+          <label>
+            <input type="radio" name="foodAllergies" value="yes"> Yes
+          </label>
+        </div>
+        <textarea id="foodAllergiesDetails" class="conditional-textarea" placeholder="Please specify your allergies or intolerances" style="display: none;"></textarea>
+      </div>
+
+      <div class="medical-question">
+        <p>Do you have textile or chemical allergies or intolerances?</p>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="chemicalAllergies" value="no" required> No
+          </label>
+          <label>
+            <input type="radio" name="chemicalAllergies" value="yes"> Yes
+          </label>
+        </div>
+        <textarea id="chemicalAllergiesDetails" class="conditional-textarea" placeholder="Please specify your allergies or intolerances" style="display: none;"></textarea>
+      </div>
+
+      <div class="medical-question">
+        <p>Do you have important health issues or medical incapacity?</p>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="healthIssues" value="no" required> No
+          </label>
+          <label>
+            <input type="radio" name="healthIssues" value="yes"> Yes
+          </label>
+        </div>
+        <textarea id="healthIssuesDetails" class="conditional-textarea" placeholder="Please specify your health issues or incapacity" style="display: none;"></textarea>
+      </div>
+
+      <div class="medical-question">
+        <p>Do you have any medical equipment?</p>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="medicalEquipment" value="no" required> No
+          </label>
+          <label>
+            <input type="radio" name="medicalEquipment" value="yes"> Yes
+          </label>
+        </div>
+        <textarea id="medicalEquipmentDetails" class="conditional-textarea" placeholder="Please specify your medical equipment" style="display: none;"></textarea>
+      </div>
+
+      <div class="medical-confirmations">
+        <label class="checkbox-label">
+          <input type="checkbox" id="healthInfoConfirm" required>
+          I confirm that I have provided all relevant information concerning my state of health.
+        </label>
+        
+        <label class="checkbox-label">
+          <input type="checkbox" id="gdprConfirm" required>
+          I authorize The Third House, a non-profit organization, to use this data only in cases of medical necessity or security, in accordance with the GDPR.
+        </label>
+      </div>
+
+      <div id="doc1Section" class="document-section disabled">
+        <h2>Règlement extérieur de l'ASBL The Third House</h2>
         <iframe id="docFrame1" src="https://drive.google.com/file/d/14204RWAFdW0JIDB_gW1n50VrJbXaXcNB/preview" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
         
         <div id="acceptance1" class="acceptance-box">
@@ -239,7 +346,7 @@
       </div>
 
       <div id="doc2Section" class="document-section disabled">
-        <h2><span class="step-number">3</span>Second Document Review</h2>
+        <h2>CHARTE de l'ASBL The Third House</h2>
         <iframe id="docFrame2" src="https://drive.google.com/file/d/1u2Wawp1ydYlD8A_HrxkIx9E_R_euVkC0/preview" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
         
         <div id="acceptance2" class="acceptance-box">
@@ -265,18 +372,52 @@
     let doc1Accepted = false;
     let doc2Accepted = false;
 
+    // Gestion des champs conditionnels
+    const medicalQuestions = ['foodAllergies', 'chemicalAllergies', 'healthIssues', 'medicalEquipment'];
+    
+    medicalQuestions.forEach(name => {
+      const radioButtons = document.querySelectorAll(`input[name="${name}"]`);
+      const textarea = document.getElementById(`${name}Details`);
+      
+      radioButtons.forEach(radio => {
+        radio.addEventListener('change', () => {
+          textarea.style.display = radio.value === 'yes' ? 'block' : 'none';
+          if (radio.value === 'no') textarea.value = '';
+          if (radio.value === 'yes') textarea.required = true;
+          else textarea.required = false;
+        });
+      });
+    });
+
+    // Fonction pour vérifier si la section médicale est complète
+    function checkMedicalSection() {
+      const healthConfirm = document.getElementById('healthInfoConfirm').checked;
+      const gdprConfirm = document.getElementById('gdprConfirm').checked;
+      return healthConfirm && gdprConfirm;
+    }
+
     // Fonction pour vérifier si le formulaire est complet
     function checkFormCompletion() {
       const allInputsFilled = Array.from(form.querySelectorAll('input[required]'))
         .every(input => input.value.trim() !== '');
+      const allTextareasFilled = Array.from(form.querySelectorAll('textarea[required]'))
+        .every(textarea => textarea.value.trim() !== '');
+      const medicalComplete = checkMedicalSection();
       
-      submitBtn.disabled = !(allInputsFilled && doc1Accepted && doc2Accepted);
+      // Active la section des documents seulement si la partie médicale est complète
+      doc1Section.classList.toggle('disabled', !medicalComplete);
+      
+      submitBtn.disabled = !(allInputsFilled && allTextareasFilled && medicalComplete && doc1Accepted && doc2Accepted);
     }
 
-    // Écouter les changements dans les champs du formulaire
-    form.querySelectorAll('input[required]').forEach(input => {
+    // Écouter les changements dans tous les champs du formulaire
+    form.querySelectorAll('input[required], textarea[required]').forEach(input => {
       input.addEventListener('input', checkFormCompletion);
     });
+
+    // Écouter les changements des checkboxes médicales
+    document.getElementById('healthInfoConfirm').addEventListener('change', checkFormCompletion);
+    document.getElementById('gdprConfirm').addEventListener('change', checkFormCompletion);
 
     accept1Button.addEventListener('click', () => {
       doc1Accepted = true;
